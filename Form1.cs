@@ -65,11 +65,7 @@ namespace KillAllIeProcesses
         {
             try
             {
-                foreach (Process proc in Processes)
-                {
-                    proc.Kill();
-                    proc.WaitForExit();
-                }
+                KillAllProcesses();
             }
             catch (System.NullReferenceException)
             {
@@ -80,7 +76,42 @@ namespace KillAllIeProcesses
                 UpdateList();
             }
         }
-        private void closing(object sender, System.ComponentModel.CancelEventArgs e) { }
+
+        private void KillAllProcesses()
+        {
+            foreach (Process proc in Processes)
+            {
+                proc.Kill();
+                proc.WaitForExit();
+            }
+        }
+
+        private void closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (Processes == null || Processes.Length == 0)
+            {
+                return;
+            }
+            
+            var result = MessageBox.Show("すべてのInternet Explorerプロセスを強制終了しますか？",
+                "確認",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Exclamation,
+                MessageBoxDefaultButton.Button2);
+            switch (result)
+            {
+                case DialogResult.Yes:
+                    try
+                    {
+                        KillAllProcesses();
+                    }
+                    catch { }
+                    break;
+                default:
+                    MessageBox.Show("Internet Explorer強制終了を中止しました。");
+                    break;
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             UpdateList();
