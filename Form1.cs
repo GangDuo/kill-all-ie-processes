@@ -61,7 +61,25 @@ namespace KillAllIeProcesses
                 UpdateList();
             }
         }
-        private void btnCloseAll_Click(object sender, System.EventArgs e) { }
+        private void btnCloseAll_Click(object sender, System.EventArgs e)
+        {
+            try
+            {
+                foreach (Process proc in Processes)
+                {
+                    proc.Kill();
+                    proc.WaitForExit();
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                MessageBox.Show("No instances of Internet Explorer running.");
+            }
+            finally
+            {
+                UpdateList();
+            }
+        }
         private void closing(object sender, System.ComponentModel.CancelEventArgs e) { }
         private void button1_Click(object sender, EventArgs e) { }
     }
