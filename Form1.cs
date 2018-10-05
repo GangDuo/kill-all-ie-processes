@@ -13,8 +13,7 @@ namespace KillAllIeProcesses
 {
     public partial class Form1 : Form
     {
-        private Process[] Processes;
-        private static readonly string IeProcName = "iexplore";
+        private ProcessMonitor processMonitor = new ProcessMonitor();
 
         public Form1()
         {
@@ -29,15 +28,10 @@ namespace KillAllIeProcesses
         {
             ListViewItem itemAdd;
             ListView1.Items.Clear();
-            Processes = Process.GetProcessesByName(IeProcName);
-            foreach (Process proc in Processes)
+            processMonitor.Refresh();
+            foreach (var proc in processMonitor.Processes)
             {
-                var title = proc.MainWindowTitle;
-                if (title.Length == 0)
-                {
-                    title = "Internet Explorer";
-                }
-                itemAdd = ListView1.Items.Add(title);
+                itemAdd = ListView1.Items.Add(proc.Description);
                 itemAdd.SubItems.Add(proc.Id.ToString());
             }
         }
@@ -47,9 +41,7 @@ namespace KillAllIeProcesses
             try
             {
                 int procID = System.Convert.ToInt32(ListView1.SelectedItems[0].SubItems[1].Text);
-                Process tempProc = Process.GetProcessById(procID);
-                tempProc.Kill();
-                tempProc.WaitForExit();
+                ProcessMonitor.Process.KillProcessById(procID);
             }
             catch
             {
@@ -65,7 +57,7 @@ namespace KillAllIeProcesses
         {
             try
             {
-                KillAllProcesses();
+                processMonitor.KillAllProcesses();
             }
             catch (System.NullReferenceException)
             {
@@ -77,18 +69,9 @@ namespace KillAllIeProcesses
             }
         }
 
-        private void KillAllProcesses()
-        {
-            foreach (Process proc in Processes)
-            {
-                proc.Kill();
-                proc.WaitForExit();
-            }
-        }
-
         private void closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Processes == null || Processes.Length == 0)
+            if (processMonitor.IsEmpty)
             {
                 return;
             }
@@ -103,7 +86,7 @@ namespace KillAllIeProcesses
                 case DialogResult.Yes:
                     try
                     {
-                        KillAllProcesses();
+                        processMonitor.KillAllProcesses();
                     }
                     catch { }
                     break;
