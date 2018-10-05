@@ -22,6 +22,11 @@ namespace KillAllIeProcesses
         }
         private void Form1_Load(object sender, System.EventArgs e)
         {
+            UpdateList();
+        }
+
+        private void UpdateList()
+        {
             ListViewItem itemAdd;
             ListView1.Items.Clear();
             Processes = Process.GetProcessesByName(IeProcName);
@@ -36,7 +41,26 @@ namespace KillAllIeProcesses
                 itemAdd.SubItems.Add(proc.Id.ToString());
             }
         }
-        private void btnClose1_Click(object sender, System.EventArgs e) { }
+
+        private void btnClose1_Click(object sender, System.EventArgs e)
+        {
+            try
+            {
+                int procID = System.Convert.ToInt32(ListView1.SelectedItems[0].SubItems[1].Text);
+                Process tempProc = Process.GetProcessById(procID);
+                tempProc.Kill();
+                tempProc.WaitForExit();
+            }
+            catch
+            {
+                MessageBox.Show("Please select a process in the ListView before clicking this button." +
+                    " Or the Process may have been closed by somebody.");
+            }
+            finally
+            {
+                UpdateList();
+            }
+        }
         private void btnCloseAll_Click(object sender, System.EventArgs e) { }
         private void closing(object sender, System.ComponentModel.CancelEventArgs e) { }
         private void button1_Click(object sender, EventArgs e) { }
