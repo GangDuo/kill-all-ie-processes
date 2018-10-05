@@ -16,5 +16,10 @@ namespace KillAllIeProcesses
         {
             InitializeComponent();
         }
+        private void Form1_Load(object sender, System.EventArgs e) { }
+        private void btnClose1_Click(object sender, System.EventArgs e) { }
+        private void btnCloseAll_Click(object sender, System.EventArgs e) { }
+        private void closing(object sender, System.ComponentModel.CancelEventArgs e) { }
+        private void button1_Click(object sender, EventArgs e) { }
     }
 }
