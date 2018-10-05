@@ -81,6 +81,9 @@ namespace KillAllIeProcesses
             }
         }
         private void closing(object sender, System.ComponentModel.CancelEventArgs e) { }
-        private void button1_Click(object sender, EventArgs e) { }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            UpdateList();
+        }
     }
 }
